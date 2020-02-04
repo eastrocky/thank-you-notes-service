@@ -13,7 +13,10 @@ func ThanksGet(repo repository.Repository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		thankyous, err := repo.Get(c.Param("to"))
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    http.StatusText(http.StatusInternalServerError),
+				"message": err.Error(),
+			})
 			return
 		}
 		c.JSON(http.StatusOK, thankyous)
@@ -33,7 +36,10 @@ func ThanksPost(repo repository.Repository) gin.HandlerFunc {
 			return
 		}
 		if err := repo.Save(thankyou); err != nil {
-			c.JSON(http.StatusInternalServerError, err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    http.StatusText(http.StatusInternalServerError),
+				"message": err.Error(),
+			})
 			return
 		}
 		c.JSON(http.StatusCreated, thankyou)
